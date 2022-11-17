@@ -1,4 +1,4 @@
-module awesomeProject1
+module github.com/curriculum_01_mai-fujita/awesomeProject1
 
 go 1.18
 
