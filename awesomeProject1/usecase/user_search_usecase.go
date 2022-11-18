@@ -1,10 +1,14 @@
 package main
 
+/*
 import (
 	"encoding/json"
 	"log"
 	"net/http"
 )
+
+
+
 
 //ユーザーを検索する
 // ② /userでリクエストされたらnameパラメーターと一致する名前を持つレコードをJSON形式で返す
@@ -73,3 +77,4 @@ func main() {
 		log.Fatal(err)
 	}
 }
+*/
