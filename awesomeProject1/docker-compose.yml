@@ -1,0 +1,41 @@
+version: '3.7'
+
+services:
+  go:
+    container_name: go
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    tty: true
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    volumes:
+      - type: bind
+        source: ./app
+        target: /go/app
+    environment:
+      MYSQL_DATABASE: MYSQL_DATABASE
+      MYSQL_USER: MYSQL_USER 
+      MYSQL_PASSWORD: MYSQL_PWD
+      MYSQL_HOST: MYSQL_HOST 
+  
+  db:
+    image: mysql:8.0
+    container_name: h-db
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+    - 3306:3306
+
+    environment:
+      MYSQL_DATABASE: MYSQL_DATABASE
+      MYSQL_USER: MYSQL_USER 
+      MYSQL_PASSWORD: MYSQL_PWD
+      MYSQL_HOST: MYSQL_HOST
+      MYSQL_ROOT_PASSWORD: rootpass
+
+
+

@@ -1,20 +1,51 @@
 package main
 
 import (
-	"database/sql"
-	"encoding/json"
+	"flag"
 	"fmt"
+	"github.com/curriculum_01_mai-fujita/awesomeProject1/controller"
+	"github.com/curriculum_01_mai-fujita/awesomeProject1/model"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/oklog/ulid"
-	"log"
-	"math/rand"
 	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
 )
 
+// todoModelのインスタンスを作成。
+var tm = model.CreatePointModel()
+
+// todoControllerのインスタンスを作成。todoModelを注入。
+var tc = controller.CreatePointController(tm)
+
+// routerのインスタンスを作成。todoControllerを作成。
+var ro = controller.CreateRouter(tc)
+
+func migrate() {
+	sql := `INSERT INTO todos(id, name, status) VALUES('00000000000000000000000000','買い物', '作業中'),('00000000000000000000000001','洗濯', '作業中'),('00000000000000000000000002','皿洗い', '完了');`
+
+	_, err := model.Db.Exec(sql)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println("Migration is success!")
+}
+
+func main() {
+	f := flag.String("option", "", "migrate database or not")
+	flag.Parse()
+	if *f == "migrate" {
+		migrate()
+	}
+	// 省略
+	http.HandleFunc("/fetch-points", ro.FetchPoints)
+	http.HandleFunc("/add-point", ro.AddPoint)
+	http.HandleFunc("/delete-point", ro.DeletePoint)
+	http.HandleFunc("/change-point", ro.ChangePoint)
+	http.ListenAndServe(":8080", nil)
+}
+
+/*
 var db *sql.DB
 
 type UserResForHTTPGet struct {
@@ -69,7 +100,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 									w.WriteHeader(http.StatusBadRequest)
 									return
 						         }
-		*/
+
 
 		// ②-2　GETリクエストのクエリパラメータから条件を満たすデータを取得
 		rows, err := db.Query("SELECT user.id, user.name, user.age FROM user WHERE user.name = ?", name)
@@ -225,7 +256,7 @@ func pointHandler(w http.ResponseWriter, r *http.Request) {
 		/*case http.MethodPut:
 		var edit Edit
 		if err := json.NewDecoder(r.Body).Decode()
-		*/
+
 	}
 }
 
@@ -301,6 +332,7 @@ func main() {
 	http.HandleFunc("/user", handler)
 	http.HandleFunc("/point", pointHandler)
 	http.HandleFunc("/signup", userSignup)
+	http.ListenAndServe(":8080", nil)
 	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
 	closeDBWithSysCall()
 
@@ -326,3 +358,4 @@ func closeDBWithSysCall() {
 		os.Exit(0)
 	}()
 }
+*/
