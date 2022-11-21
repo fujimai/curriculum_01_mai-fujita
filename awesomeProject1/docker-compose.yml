@@ -4,8 +4,7 @@ services:
   go:
     container_name: go
     build:
-      context: ./app
-      dockerfile: Dockerfile
+      context: .
     tty: true
     ports:
       - 8080:8080
@@ -23,10 +22,9 @@ services:
   
   db:
     image: mysql:8.0
-    container_name: h-db
+    container_name: hack_db
     build:
       context: .
-      dockerfile: Dockerfile
     ports:
     - 3306:3306
 
